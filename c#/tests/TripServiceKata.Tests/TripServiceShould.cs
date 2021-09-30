@@ -12,11 +12,16 @@ namespace TripServiceKata.Tests
     {
         private static User loggedUser;
         private static List<Trip> userTrips;
+        private TripServiceMock tripService;
+
+        [SetUp]
+        public void SetUp() {
+            tripService = new TripServiceMock();
+        }
 
         [Test]
         public void throw_exception_when_user_is_not_logged_in() {
             loggedUser = null;
-            var tripService = new TripServiceMock();
 
             Action action = () => tripService.GetTripsByUser(null, loggedUser);
 
@@ -26,9 +31,8 @@ namespace TripServiceKata.Tests
         [Test]
         public void return_an_empty_trip_list_when_users_are_not_friends() {
             loggedUser = new User();
-            var tripService = new TripServiceMock();
-
             var aGivenUser = new User();
+            
             var friendTrips = tripService.GetTripsByUser(aGivenUser, loggedUser);
 
             friendTrips.Should().BeEmpty();
@@ -38,10 +42,9 @@ namespace TripServiceKata.Tests
         public void return_trip_list_when_users_are_friends() {
             loggedUser = new User();
             userTrips = new List<Trip>() { new Trip() };
-            var tripService = new TripServiceMock();
-
             var aGivenUser = new User();
             aGivenUser.AddFriend(loggedUser);
+
             var friendTrips = tripService.GetTripsByUser(aGivenUser, loggedUser);
 
             friendTrips.Count.Should().Be(1);
