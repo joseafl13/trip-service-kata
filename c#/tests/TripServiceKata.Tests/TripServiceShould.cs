@@ -18,7 +18,7 @@ namespace TripServiceKata.Tests
             loggedUser = null;
             var tripService = new TripServiceMock();
 
-            Action action = () => tripService.GetTripsByUser(null);
+            Action action = () => tripService.GetTripsByUser(null, loggedUser);
 
             action.Should().Throw<UserNotLoggedInException>();
         }
@@ -29,7 +29,7 @@ namespace TripServiceKata.Tests
             var tripService = new TripServiceMock();
 
             var aGivenUser = new User();
-            var friendTrips = tripService.GetTripsByUser(aGivenUser);
+            var friendTrips = tripService.GetTripsByUser(aGivenUser, loggedUser);
 
             friendTrips.Should().BeEmpty();
         }
@@ -42,17 +42,13 @@ namespace TripServiceKata.Tests
 
             var aGivenUser = new User();
             aGivenUser.AddFriend(loggedUser);
-            var friendTrips = tripService.GetTripsByUser(aGivenUser);
+            var friendTrips = tripService.GetTripsByUser(aGivenUser, loggedUser);
 
             friendTrips.Count.Should().Be(1);
         }
 
         private class TripServiceMock : TripService
         {
-            protected override User GetLoggedUser() {
-                return loggedUser;
-            }
-
             protected override List<Trip> FindTripsByUser(User user) {
                 return userTrips;
             }
