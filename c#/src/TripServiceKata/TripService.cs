@@ -25,13 +25,17 @@ namespace TripServiceKata
 
                 if (isFriend)
                 {
-                    tripList = TripDAO.FindTripsByUser(user);
+                    tripList = FindTripsByUser(user);
                 }
 
                 return tripList;
             }
 
             throw new UserNotLoggedInException();
+        }
+
+        protected virtual List<Trip> FindTripsByUser(User user) {
+            return TripDAO.FindTripsByUser(user);
         }
 
         protected virtual User GetLoggedUser() {
